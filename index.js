@@ -12,9 +12,10 @@ app.use(cors());
 app.use(morgan("dev"))
 app.use(require("./routes/comments.route"))
 
-// app.use(require("./routes/users.route"));
+app.use(require("./routes/user.route"));
 app.use(require("./routes/task.route"));
 app.use(require("./routes/course.route"));
+app.use(require("./routes/chat.route"));
 
 app.use('/assets', express.static(__dirname + '/assets'))
 
