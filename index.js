@@ -10,6 +10,7 @@ const morgan = require("morgan")
 app.use(express.json());
 app.use(cors());
 app.use(morgan("dev"))
+app.use(require("./routes/comments.route"))
 
 // app.use(require("./routes/users.route"));
 
