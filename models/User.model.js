@@ -27,7 +27,7 @@ const userSchema = mongoose.Schema({
     avatar: {
         type: String,
         default: 'default-avatar.jpg'
-    }, 
+    },
 
     progress: {
         type: Number,
