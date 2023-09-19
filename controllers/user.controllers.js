@@ -24,7 +24,7 @@ module.exports.userController = {
         username: username,
 
         password: hash,
-        roel: role,
+        role: role,
       });
       console.log(users);
       res.status(201).json({ message: "Пользователь успешно зарегистрирован" });
