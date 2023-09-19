@@ -5,6 +5,13 @@ const mongoose = require("mongoose");
 const app = express();
 const cors = require("cors");
 const morgan = require("morgan")
+const http = require('http').Server(app)
+
+const socketIO = require('socket.io')(http, {
+  cors: {
+    origin: 'http://localhost:5173'
+  }
+})
 
 
 app.use(express.json());
@@ -17,6 +24,13 @@ app.use(require("./routes/task.route"));
 app.use(require("./routes/course.route"));
 app.use(require("./routes/chat.route"));
 
+socketIO.on('connection', (socket) => {
+    console.log(`${socket.id} user connected`);
+    socket.on('disconnect', () => {
+      console.log(`${socket.id} disconnect`);
+    })
+})
+
 app.use('/assets', express.static(__dirname + '/assets'))
 
 mongoose
@@ -24,5 +38,5 @@ mongoose
   .then(() => console.log("Связь с MongoBD установлена"))
   .catch((error) => console.log(error.toString()));
 
-app.listen(process.env.PORT, () => console.log("Сервер запущен"));
+http.listen(process.env.PORT, () => console.log("Сервер запущен"));
  
