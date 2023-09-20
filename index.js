@@ -4,17 +4,23 @@ const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
 const cors = require("cors");
-const morgan = require("morgan")
+const morgan = require("morgan");
 const http = require('http').Server(app)
+
+
 
 const socketIO = require('socket.io')(http, {
   cors: {
     origin: 'http://localhost:5173'
   }
 })
+
 app.use(express.json());
+app.use(express.static('static'))
 app.use(cors());
 app.use(morgan("dev"))
+app.use("/images", express.static(__dirname + "/images"));
+
 app.use(require("./routes/comments.route"))
 app.use(require("./routes/task.route"))
 app.use(require("./routes/user.route"))
