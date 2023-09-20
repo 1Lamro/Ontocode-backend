@@ -1,7 +1,9 @@
 const User = require("../models/User.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const Uuid = require('uuid')
 const { validationResult } = require("express-validator");
+const { config } = require("dotenv");
 
 module.exports.userController = {
   registration: async (req, res) => {
@@ -22,7 +24,6 @@ module.exports.userController = {
       const users = await User.create({
         email: email,
         username: username,
-
         password: hash,
         role: role,
       });
@@ -62,7 +63,7 @@ module.exports.userController = {
     } catch (error) {
       res
         .status(500)
-        .json({ message: "Что-то пошло не так. Попробуйте снова." });
+        .json({ message: "Что-то пошло не так. Токен не виден. Попробуйте снова." });
     }
   },
 
@@ -73,20 +74,89 @@ module.exports.userController = {
     } catch (error) {
       res
         .status(500)
-        .json({ message: "Что-то пошло не так. Попробуйте снова." });
+        .json({ message: "Что-то пошло не так. Профиль не виден. Попробуйте снова." });
     }
   },
-
-  updateAvatar: async (req, res) => {
+  addImage: async (req, res) => {
     try {
-      const user = await User.findById(req.params.id);
-      user.avatar = req.body.avatar;
-      await user.save();
-      res.json({ message: "Аватар успешно обновлен" });
+      const data = await User.findByIdAndUpdate(
+        req.user.id,
+        {
+          $push: { images: req.file.path },
+        },
+        { new: true }
+      ).populate("images");
+
+      res.json(data.images);
     } catch (error) {
-      res
-        .status(500)
-        .json({ message: "Что-то пошло не так. Попробуйте снова." });
+      res.json(error.message);
     }
   },
+  findImages: async (req, res) => {
+    try {
+      const data = await User.findById(req.user.id).populate("images");
+      res.json(data.images);
+    } catch (error) {
+      res.json(error.message);
+    }
+  },
+  onePeopleImage: async (req, res) => {
+    try {
+      const data = await User.findById(req.params.id).populate("images");
+      res.json(data.images);
+    } catch (error) {
+      res.json(error.message);
+    }
+  },
+  editImage: async (req, res) => {
+    const data = await User.findByIdAndUpdate(
+      req.user.id,
+      {
+        image: req.file.path,
+      },
+      { new: true }
+    );
+    res.json(data);
+  },
+  // updateAvatar: async (req, res) => {
+  //   try {
+  //     const user = await User.findById(req.params.id);
+  //     user.avatar = req.body.avatar;
+  //     await user.save();
+  //     res.json({ message: "Аватар успешно обновлен" });
+  //   } catch (error) {
+  //     res
+  //       .status(500)
+  //       .json({ message: "Что-то пошло не так. Попробуйте снова." });
+  //   }
+  // },
+  // uploadAvatar: async (req, res) => {
+  //   try {
+  //     const file = req.file; // Используем req.file для доступа к загруженному файлу
+  //     const user = await User.findById(req.user.id);
+  //     if (!file) {
+  //       return res.status(400).json({ message: "Файл не был загружен" });
+  //     }
+      
+  //     const avatarName = Uuid.v4() + '.jpg';
+  //     file.mv(config.get('staticPath') + '/' + avatarName);
+  //     user.avatar = avatarName;
+  //     await user.save();
+      
+  //     return res.json('Аватар загружен');
+  //   } catch (error) {
+  //     res
+  //       .status(400)
+  //       .json({ message: "Upload avatar error" });
+  //   }
+  // }
+  deleteUser: async (req, res) => {
+    try {
+        const data = await User.findByIdAndDelete(req.params.id)
+        res.json(data)
+    } catch (error) {
+        res.json(error.message)
+    }
+
+},
 };
