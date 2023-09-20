@@ -19,6 +19,6 @@ router.get("/allimages", checkAuth, userController.findImages); // вывод ф
 router.patch("/editimage", upload.single("img"), checkAuth, userController.editImage); // изменение авы
 router.post('/login', loginValidator,  userController.login);
 router.get('/profile', userController.getUserProfile);
-router.put('/profile/avatar', userController.updateAvatar);
+// router.put('/profile/avatar', userController.updateAvatar);
 
 module.exports = router;
