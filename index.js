@@ -34,6 +34,9 @@ app.use(require("./routes/chat.route"));
 
 socketIO.on('connection', (socket) => {
     console.log(`${socket.id} user connected`);
+    socket.on('message', (data) => {
+      console.log('message', data);
+    })
     socket.on('disconnect', () => {
       console.log(`${socket.id} disconnect`);
     })

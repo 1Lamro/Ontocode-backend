@@ -17,5 +17,8 @@ router.delete('/profile/:id', checkAuth, userController.deleteUser)
 router.patch("/addimage", checkAuth, fileMiddleware.single("img"), userController.addImage); // добавление фото
 router.get("/allimages", checkAuth, userController.findImages); // вывод фото
 router.patch("/editimage", upload.single("img"), checkAuth, userController.editImage); // изменение авы
+router.post('/login', loginValidator,  userController.login);
+router.get('/profile', userController.getUserProfile);
+router.put('/profile/avatar', userController.updateAvatar);
 
 module.exports = router;
