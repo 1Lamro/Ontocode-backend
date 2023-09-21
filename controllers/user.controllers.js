@@ -89,4 +89,32 @@ module.exports.userController = {
         .json({ message: "Что-то пошло не так. Попробуйте снова." });
     }
   },
+  updateCourse: async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const { basicCourse, plusCourse, proCourse } = req.body;
+
+      // На основе полученных данных определите, какой курс пользователь покупает.
+
+      // Пример: Если пользователь покупает basicCourse, обновите соответствующий ключ.
+      if (basicCourse) {
+          await User.findByIdAndUpdate(userId, { basicCourse: true });
+          await User.findByIdAndUpdate(userId, { plusCourse: false, proCourse: false });
+      }
+      // Пример: Если пользователь покупает plusCourse, обновите соответствующий ключ.
+      else if (plusCourse) {
+          await User.findByIdAndUpdate(userId, { plusCourse: true });
+          await User.findByIdAndUpdate(userId, { basicCourse: false, proCourse: false });
+      }
+      // Пример: Если пользователь покупает proCourse, обновите соответствующий ключ.
+      else if (proCourse) {
+          await User.findByIdAndUpdate(userId, { proCourse: true });
+          await User.findByIdAndUpdate(userId, { basicCourse: false, plusCourse: false });
+      }
+
+      res.json({ message: "Курс успешно куплен" });
+  } catch (err) {
+      res.status(500).json({ message: "Что-то пошло не так. Попробуйте снова." });
+  }
+}
 };

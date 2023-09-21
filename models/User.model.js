@@ -34,6 +34,18 @@ const userSchema = mongoose.Schema({
         default: 0,
         max: 100
     },
+    basicCourse:{
+        type: Boolean,
+        default: false
+    },
+    plusCourse:{
+        type: Boolean,
+        default: false
+    },
+    proCourse:{
+        type:Boolean,
+        default: false
+    }
 
 })
 
