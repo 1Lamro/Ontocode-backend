@@ -34,6 +34,7 @@ app.use(require("./routes/chat.route"));
 
 const users = []
 
+
 socketIO.on('connection', (socket) => {
   console.log(`${socket.id} user connected`);
   socket.on('message', (data) => {
@@ -52,6 +53,9 @@ socketIO.on('connection', (socket) => {
     console.log(`${socket.id} disconnect`);
   })
 });
+// app.get('/chat/users', (req, res) => {
+//   res.send(users)
+// })
 app.use('/assets', express.static(__dirname + '/assets'))
 
 mongoose
