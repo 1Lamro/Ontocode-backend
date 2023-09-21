@@ -1,7 +1,9 @@
 const User = require("../models/User.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const Uuid = require('uuid')
 const { validationResult } = require("express-validator");
+const { config } = require("dotenv");
 
 module.exports.userController = {
   registration: async (req, res) => {
@@ -22,7 +24,6 @@ module.exports.userController = {
       const users = await User.create({
         email: email,
         username: username,
-
         password: hash,
         role: role,
       });
@@ -62,31 +63,61 @@ module.exports.userController = {
     } catch (error) {
       res
         .status(500)
-        .json({ message: "Что-то пошло не так. Попробуйте снова." });
+        .json({ message: "Что-то пошло не так. Токен не виден. Попробуйте снова." });
     }
   },
 
   getUserProfile: async (req, res) => {
     try {
       const user = await User.findById(req.params.id);
+      console.log(req.params.id)
       res.json(user);
+      console.log(user)
     } catch (error) {
       res
         .status(500)
-        .json({ message: "Что-то пошло не так. Попробуйте снова." });
+        .json(error.toString());
     }
   },
-
-  updateAvatar: async (req, res) => {
+  addImage: async (req, res) => {
     try {
-      const user = await User.findById(req.params.id);
-      user.avatar = req.body.avatar;
-      await user.save();
-      res.json({ message: "Аватар успешно обновлен" });
+      const data = await User.findByIdAndUpdate(
+        req.user.id,
+        {
+          $push: { images: req.file.path },
+        },
+        { new: true }
+      ).populate("images");
+
+      res.json(data.images);
     } catch (error) {
-      res
-        .status(500)
-        .json({ message: "Что-то пошло не так. Попробуйте снова." });
+      res.json(error.message);
+    }
+  },
+   editImage: async (req, res) => {
+    const data = await User.findByIdAndUpdate(
+      req.user.id,
+      {
+        image: req.file.path,
+      },
+      { new: true }
+    );
+    res.json(data);
+  },
+  deleteUser: async (req, res) => {
+    try {
+        const data = await User.findByIdAndDelete(req.params.id)
+        res.json(data)
+    } catch (error) {
+        res.json(error.message)
+    }
+    },
+  findImages: async (req, res) => {
+    try {
+      const data = await User.findById(req.user.id).populate("images");
+      res.json(data.images);
+    } catch (error) {
+      res.json(error.message);
     }
   },
   updateCourse: async (req, res) => {
