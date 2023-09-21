@@ -100,14 +100,6 @@ module.exports.userController = {
       res.json(error.message);
     }
   },
-  onePeopleImage: async (req, res) => {
-    try {
-      const data = await User.findById(req.params.id).populate("images");
-      res.json(data.images);
-    } catch (error) {
-      res.json(error.message);
-    }
-  },
   editImage: async (req, res) => {
     const data = await User.findByIdAndUpdate(
       req.user.id,

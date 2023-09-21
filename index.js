@@ -29,7 +29,7 @@ app.use(require("./routes/course.route"))
 
 app.use(require("./routes/user.route"));
 app.use(require("./routes/task.route"));
-app.use(require("./routes/course.route"));
+// app.use(require("./routes/course.route"));
 app.use(require("./routes/chat.route"));
 
 socketIO.on('connection', (socket) => {
