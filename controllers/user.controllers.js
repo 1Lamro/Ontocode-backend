@@ -94,15 +94,7 @@ module.exports.userController = {
       res.json(error.message);
     }
   },
-  findImages: async (req, res) => {
-    try {
-      const data = await User.findById(req.user.id).populate("images");
-      res.json(data.images);
-    } catch (error) {
-      res.json(error.message);
-    }
-  },
-  editImage: async (req, res) => {
+   editImage: async (req, res) => {
     const data = await User.findByIdAndUpdate(
       req.user.id,
       {
@@ -112,38 +104,6 @@ module.exports.userController = {
     );
     res.json(data);
   },
-  // updateAvatar: async (req, res) => {
-  //   try {
-  //     const user = await User.findById(req.params.id);
-  //     user.avatar = req.body.avatar;
-  //     await user.save();
-  //     res.json({ message: "Аватар успешно обновлен" });
-  //   } catch (error) {
-  //     res
-  //       .status(500)
-  //       .json({ message: "Что-то пошло не так. Попробуйте снова." });
-  //   }
-  // },
-  // uploadAvatar: async (req, res) => {
-  //   try {
-  //     const file = req.file; // Используем req.file для доступа к загруженному файлу
-  //     const user = await User.findById(req.user.id);
-  //     if (!file) {
-  //       return res.status(400).json({ message: "Файл не был загружен" });
-  //     }
-      
-  //     const avatarName = Uuid.v4() + '.jpg';
-  //     file.mv(config.get('staticPath') + '/' + avatarName);
-  //     user.avatar = avatarName;
-  //     await user.save();
-      
-  //     return res.json('Аватар загружен');
-  //   } catch (error) {
-  //     res
-  //       .status(400)
-  //       .json({ message: "Upload avatar error" });
-  //   }
-  // }
   deleteUser: async (req, res) => {
     try {
         const data = await User.findByIdAndDelete(req.params.id)
@@ -151,6 +111,41 @@ module.exports.userController = {
     } catch (error) {
         res.json(error.message)
     }
+    },
+  findImages: async (req, res) => {
+    try {
+      const data = await User.findById(req.user.id).populate("images");
+      res.json(data.images);
+    } catch (error) {
+      res.json(error.message);
+    }
+  },
+  updateCourse: async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const { basicCourse, plusCourse, proCourse } = req.body;
 
-},
+      // На основе полученных данных определите, какой курс пользователь покупает.
+
+      // Пример: Если пользователь покупает basicCourse, обновите соответствующий ключ.
+      if (basicCourse) {
+          await User.findByIdAndUpdate(userId, { basicCourse: true });
+          await User.findByIdAndUpdate(userId, { plusCourse: false, proCourse: false });
+      }
+      // Пример: Если пользователь покупает plusCourse, обновите соответствующий ключ.
+      else if (plusCourse) {
+          await User.findByIdAndUpdate(userId, { plusCourse: true });
+          await User.findByIdAndUpdate(userId, { basicCourse: false, proCourse: false });
+      }
+      // Пример: Если пользователь покупает proCourse, обновите соответствующий ключ.
+      else if (proCourse) {
+          await User.findByIdAndUpdate(userId, { proCourse: true });
+          await User.findByIdAndUpdate(userId, { basicCourse: false, plusCourse: false });
+      }
+
+      res.json({ message: "Курс успешно куплен" });
+  } catch (err) {
+      res.status(500).json({ message: "Что-то пошло не так. Попробуйте снова." });
+  }
+}
 };

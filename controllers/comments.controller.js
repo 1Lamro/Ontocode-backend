@@ -40,7 +40,7 @@ module.exports.commentController = {
       });
       res.json(updateComment);
     } catch (err) {
-      req.json(err);
+      res.json(err);
     }
   },
 };
