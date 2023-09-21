@@ -70,11 +70,13 @@ module.exports.userController = {
   getUserProfile: async (req, res) => {
     try {
       const user = await User.findById(req.params.id);
+      console.log(req.params.id)
       res.json(user);
+      console.log(user)
     } catch (error) {
       res
         .status(500)
-        .json({ message: "Что-то пошло не так. Профиль не виден. Попробуйте снова." });
+        .json(error.toString());
     }
   },
   addImage: async (req, res) => {
