@@ -5,6 +5,7 @@ module.exports.chatController = {
     getUserChat: async (req, res) => {
         try {
             const userId = req.params.id;
+            console.log(userId);
             const chats = Chat.find({ participants: userId }).populate('participants', 'username');
             res.json(chats)
         } catch (error) {
@@ -43,5 +44,16 @@ module.exports.chatController = {
           res.status(500).json({ message: 'Что-то пошло не так. Попробуйте снова.' });
         }
       },
+
+      // getSender: async (req, res) => {
+      //   try {
+      //     const sender = await Chat.findById(req.params.id);
+      //     res.json(sender);
+      //   } catch (error) {
+      //     res
+      //       .status(500)
+      //       .json({ message: "Что-то пошло не так. Профиль не виден. Попробуйте снова." });
+      //   }
+      // },
 
 }
