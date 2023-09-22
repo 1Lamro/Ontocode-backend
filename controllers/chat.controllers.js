@@ -2,11 +2,11 @@ const Chat = require('../models/Chat.model')
 
 module.exports.chatController = {
 
-    getUserChat: async (req, res) => {
+    getChat: async (req, res) => {
         try {
-            const userId = req.params.id;
-            console.log(userId);
-            const chats = Chat.find({ participants: userId }).populate('participants', 'username');
+          const chat = req.params.chatId;
+          console.log(chat);
+            const chats = await Chat.findById(chat)
             res.json(chats)
         } catch (error) {
             res.status(500).json({ message: 'Что-то пошло не так. Попробуйте снова.' });
@@ -14,10 +14,9 @@ module.exports.chatController = {
     },
 
     createChat: async (req, res) => {
-        const { participants } = req.body;
-
+      const {text, sender} = req.body
         try {
-            const chat = new Chat({ participants });
+            const chat = await Chat.create({messages: {text, sender, timestamp}});
             await chat.save();
             res.status(201).json({ message: 'Чат успешно создан' });
         } catch (error) {
@@ -27,7 +26,6 @@ module.exports.chatController = {
 
     sendMessage: async (req, res) => {
         const { sender, text } = req.body;
-      
         try {
           const chatId = req.params.chatId;
           const chat = await Chat.findById(chatId);
@@ -44,16 +42,5 @@ module.exports.chatController = {
           res.status(500).json({ message: 'Что-то пошло не так. Попробуйте снова.' });
         }
       },
-
-      // getSender: async (req, res) => {
-      //   try {
-      //     const sender = await Chat.findById(req.params.id);
-      //     res.json(sender);
-      //   } catch (error) {
-      //     res
-      //       .status(500)
-      //       .json({ message: "Что-то пошло не так. Профиль не виден. Попробуйте снова." });
-      //   }
-      // },
 
 }

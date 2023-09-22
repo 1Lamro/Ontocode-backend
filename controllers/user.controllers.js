@@ -77,6 +77,15 @@ module.exports.userController = {
       res.status(500).json(error.toString());
     }
   },
+
+  getAllUsers: async (req, res) => {
+    try {
+        const data = await User.find({})
+        res.json(data)
+    } catch (error) {
+        res.json(error.message)
+    }
+  },
   addImage: async (req, res) => {
     try {
       const data = await User.findByIdAndUpdate(
