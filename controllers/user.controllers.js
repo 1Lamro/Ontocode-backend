@@ -1,7 +1,7 @@
 const User = require("../models/User.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const Uuid = require('uuid')
+const Uuid = require("uuid");
 const { validationResult } = require("express-validator");
 const { config } = require("dotenv");
 
@@ -61,22 +61,29 @@ module.exports.userController = {
 
       res.json({ token, userId: user._id });
     } catch (error) {
-      res
-        .status(500)
-        .json({ message: "Что-то пошло не так. Токен не виден. Попробуйте снова." });
+      res.status(500).json({
+        message: "Что-то пошло не так. Токен не виден. Попробуйте снова.",
+      });
     }
   },
 
   getUserProfile: async (req, res) => {
     try {
       const user = await User.findById(req.params.id);
-      console.log(req.params.id)
+      console.log(req.params.id);
       res.json(user);
-      console.log(user)
+      console.log(user);
     } catch (error) {
-      res
-        .status(500)
-        .json(error.toString());
+      res.status(500).json(error.toString());
+    }
+  },
+
+  getAllUsers: async (req, res) => {
+    try {
+        const data = await User.find({})
+        res.json(data)
+    } catch (error) {
+        res.json(error.message)
     }
   },
   addImage: async (req, res) => {
@@ -94,7 +101,7 @@ module.exports.userController = {
       res.json(error.message);
     }
   },
-   editImage: async (req, res) => {
+  editImage: async (req, res) => {
     const data = await User.findByIdAndUpdate(
       req.user.id,
       {
@@ -106,12 +113,12 @@ module.exports.userController = {
   },
   deleteUser: async (req, res) => {
     try {
-        const data = await User.findByIdAndDelete(req.params.id)
-        res.json(data)
+      const data = await User.findByIdAndDelete(req.params.id);
+      res.json(data);
     } catch (error) {
-        res.json(error.message)
+      res.json(error.message);
     }
-    },
+  },
   findImages: async (req, res) => {
     try {
       const data = await User.findById(req.user.id).populate("images");
@@ -129,23 +136,43 @@ module.exports.userController = {
 
       // Пример: Если пользователь покупает basicCourse, обновите соответствующий ключ.
       if (basicCourse) {
-          await User.findByIdAndUpdate(userId, { basicCourse: true });
-          await User.findByIdAndUpdate(userId, { plusCourse: false, proCourse: false });
+        await User.findByIdAndUpdate(userId, { basicCourse: true });
+        await User.findByIdAndUpdate(userId, {
+          plusCourse: false,
+          proCourse: false,
+        });
       }
       // Пример: Если пользователь покупает plusCourse, обновите соответствующий ключ.
       else if (plusCourse) {
-          await User.findByIdAndUpdate(userId, { plusCourse: true });
-          await User.findByIdAndUpdate(userId, { basicCourse: false, proCourse: false });
+        await User.findByIdAndUpdate(userId, { plusCourse: true });
+        await User.findByIdAndUpdate(userId, {
+          basicCourse: false,
+          proCourse: false,
+        });
       }
       // Пример: Если пользователь покупает proCourse, обновите соответствующий ключ.
       else if (proCourse) {
-          await User.findByIdAndUpdate(userId, { proCourse: true });
-          await User.findByIdAndUpdate(userId, { basicCourse: false, plusCourse: false });
+        await User.findByIdAndUpdate(userId, { proCourse: true });
+        await User.findByIdAndUpdate(userId, {
+          basicCourse: false,
+          plusCourse: false,
+        });
       }
 
       res.json({ message: "Курс успешно куплен" });
-  } catch (err) {
-      res.status(500).json({ message: "Что-то пошло не так. Попробуйте снова." });
-  }
-}
+    } catch (err) {
+      res
+        .status(500)
+        .json({ message: "Что-то пошло не так. Попробуйте снова." });
+    }
+  },
+
+  getUS: async (req, res) => {
+    try {
+      const data = await User.find();
+      res.json(data);
+    } catch (error) {
+      res.json(error);
+    }
+  },
 };

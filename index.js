@@ -11,7 +11,7 @@ const http = require('http').Server(app)
 
 const socketIO = require('socket.io')(http, {
   cors: {
-    origin: 'http://localhost:5173'
+    origin: 'http://localhost:5174'
   }
 })
 
@@ -34,11 +34,11 @@ app.use(require("./routes/chat.route"));
 
 const users = []
 
-
 socketIO.on('connection', (socket) => {
   console.log(`${socket.id} user connected`);
   socket.on('message', (data) => {
     socketIO.emit('response', data)
+    console.log(data)
   })
   socket.on('leaveChat', () => {
     users.filter(user => user.socketID !== socket.id);
@@ -53,9 +53,6 @@ socketIO.on('connection', (socket) => {
     console.log(`${socket.id} disconnect`);
   })
 });
-// app.get('/chat/users', (req, res) => {
-//   res.send(users)
-// })
 app.use('/assets', express.static(__dirname + '/assets'))
 
 mongoose
