@@ -69,10 +69,9 @@ module.exports.userController = {
 
   getUserProfile: async (req, res) => {
     try {
-      const user = await User.findById(req.params.id);
       console.log(req.params.id);
+      const user = await User.findById(req.params.id);
       res.json(user);
-      console.log(user);
     } catch (error) {
       res.status(500).json(error.toString());
     }
@@ -86,43 +85,10 @@ module.exports.userController = {
         res.json(error.message)
     }
   },
-  addImage: async (req, res) => {
-    try {
-      const data = await User.findByIdAndUpdate(
-        req.user.id,
-        {
-          $push: { images: req.file.path },
-        },
-        { new: true }
-      ).populate("images");
-
-      res.json(data.images);
-    } catch (error) {
-      res.json(error.message);
-    }
-  },
-  editImage: async (req, res) => {
-    const data = await User.findByIdAndUpdate(
-      req.user.id,
-      {
-        image: req.file.path,
-      },
-      { new: true }
-    );
-    res.json(data);
-  },
   deleteUser: async (req, res) => {
     try {
       const data = await User.findByIdAndDelete(req.params.id);
       res.json(data);
-    } catch (error) {
-      res.json(error.message);
-    }
-  },
-  findImages: async (req, res) => {
-    try {
-      const data = await User.findById(req.user.id).populate("images");
-      res.json(data.images);
     } catch (error) {
       res.json(error.message);
     }
@@ -175,4 +141,28 @@ module.exports.userController = {
       res.json(error);
     }
   },
+  addImage: async (req, res) => {
+    try {
+    
+        res.json(req.file.path)
+
+    } catch (error) {
+      res.json(error)
+    }
+  },
+  patchUser: async (req, res) => {
+    try {
+    const {username, avatar, password} = req.body
+    console.log(req.params.id);
+    console.log(username, avatar, password);
+      const data = await User.findByIdAndUpdate(req.params.id, {
+        avatar,
+        username,
+        password
+      })
+      res.json(data)
+    } catch (error) {
+      res.json(error.message)
+    }
+  }
 };
