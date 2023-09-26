@@ -11,7 +11,6 @@ router.post('/login', loginValidator, userController.login);
 router.get('/profile/:id', userController.getUserProfile);
 router.delete('/profile/:id', checkAuth, userController.deleteUser)
 router.post('/login', loginValidator,  userController.login);
-router.get('/profile/:id', userController.getUserProfile);
 router.get('/users', userController.getAllUsers);
 router.patch('/course/:userId', userController.updateCourse)
 router.post('/image', imgMiddleware.single('avatar'), userController.addImage)

@@ -45,6 +45,10 @@ const userSchema = mongoose.Schema({
     proCourse:{
         type:Boolean,
         default: false
+    },
+    online: {
+        type: Boolean,
+        default: false
     }
 
 })
