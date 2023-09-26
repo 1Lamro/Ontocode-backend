@@ -37,10 +37,28 @@ module.exports.chatController = {
           chat.messages.push({ sender, text });
           await chat.save();
       
-          res.json({ message: 'Сообщение успешно отправлено' });
+          res.json(chat.messages);
         } catch (error) {
           res.status(500).json({ message: 'Что-то пошло не так. Попробуйте снова.' });
         }
       },
+
+      delAllMessange: async (req, res) => {
+        try {
+          
+        } catch (error) {
+          
+        }
+      },
+
+      
+      delOneMessange: async (req, res) => {
+        try {
+          const data = await Chat.updateOne({$pull:{messages:{_id: req.body._id}}})
+          res.json("deleted")
+        } catch (error) {
+          res.json(error.toString())
+        }
+      }
 
 }
