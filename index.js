@@ -1,4 +1,5 @@
 require("dotenv").config();
+const path = require("path")
 
 const express = require("express");
 const mongoose = require("mongoose");
@@ -16,10 +17,9 @@ const socketIO = require('socket.io')(http, {
 })
 
 app.use(express.json());
-app.use(express.static('static'))
 app.use(cors());
 app.use(morgan("dev"))
-app.use("/images", express.static(__dirname + "/images"));
+app.use('/images', express.static(__dirname + '/images'))
 
 app.use(require("./routes/comments.route"))
 app.use(require("./routes/task.route"))
