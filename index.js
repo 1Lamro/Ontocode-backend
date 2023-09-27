@@ -1,5 +1,7 @@
 require("dotenv").config();
 const path = require("path")
+const Chat = require('./models/Chat.model')
+const {chatController} = require('./controllers/chat.controllers');
 
 const express = require("express");
 const mongoose = require("mongoose");
@@ -29,16 +31,24 @@ app.use(require("./routes/course.route"))
 
 app.use(require("./routes/user.route"));
 app.use(require("./routes/task.route"));
-// app.use(require("./routes/course.route"));
 app.use(require("./routes/chat.route"));
 
 const users = []
 
 socketIO.on('connection', (socket) => {
   console.log(`${socket.id} user connected`);
+  socket.on('deleteMessage', async (id) => {
+    try {
+      // const data = await Chat.delOneMessange({_id: id});
+      socketIO.emit('messageDeleted', id)
+      // console.log(data);
+    } catch (error) {
+      console.error(error.toString())
+    }
+  })
   socket.on('message', (data) => {
     socketIO.emit('response', data)
-    console.log(data)
+    // console.log(data)
   })
   socket.on('leaveChat', () => {
     users.filter(user => user.socketID !== socket.id);
