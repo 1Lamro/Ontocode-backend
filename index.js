@@ -14,7 +14,7 @@ const http = require('http').Server(app)
 
 const socketIO = require('socket.io')(http, {
   cors: {
-    origin: 'http://localhost:5174'
+    origin: 'http://localhost:5173'
   }
 })
 
