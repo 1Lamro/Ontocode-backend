@@ -39,7 +39,7 @@ socketIO.on('connection', (socket) => {
   console.log(`${socket.id} user connected`);
   socket.on('deleteMessage', async (id) => {
     try {
-      // const data = await Chat.delOneMessange({_id: id});
+      const data = await Chat.chatController.delOneMessange({_id: id});
       socketIO.emit('messageDeleted', id)
       // console.log(data);
     } catch (error) {

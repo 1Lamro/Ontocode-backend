@@ -79,10 +79,10 @@ module.exports.userController = {
 
   getAllUsers: async (req, res) => {
     try {
-        const data = await User.find({})
-        res.json(data)
+      const data = await User.find({})
+      res.json(data)
     } catch (error) {
-        res.json(error.message)
+      res.json(error.message)
     }
   },
   deleteUser: async (req, res) => {
@@ -143,8 +143,8 @@ module.exports.userController = {
   },
   addImage: async (req, res) => {
     try {
-    
-        res.json(req.file.path)
+
+      res.json(req.file.path)
 
     } catch (error) {
       res.json(error)
@@ -152,13 +152,15 @@ module.exports.userController = {
   },
   patchUser: async (req, res) => {
     try {
-    const {username, avatar, password} = req.body
-    console.log(req.params.id);
-    console.log(username, avatar, password);
+      const { username, avatar, password, online } = req.body
+      // console.log(req.params.id);
+      // console.log(username, avatar, password);
       const data = await User.findByIdAndUpdate(req.params.id, {
         avatar,
         username,
-        password
+        password,
+        online
+
       })
       res.json(data)
     } catch (error) {
